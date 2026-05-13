@@ -49,34 +49,6 @@
   color: rgba(255,255,255,0.7);
 }
 
-.nav {
-  display: flex;
-  gap: 4px;
-}
-
-.navBtn {
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 6px 14px;
-  background: transparent;
-  border: 0.5px solid transparent;
-  border-radius: var(--radius);
-  cursor: pointer;
-  color: rgba(255,255,255,0.65);
-  transition: all 0.12s ease;
-}
-
-.navBtn:hover {
-  color: #FFFFFF;
-  background: rgba(255,255,255,0.1);
-}
-
-.navActive {
-  color: #FFFFFF !important;
-  background: rgba(255,255,255,0.15) !important;
-  border-color: rgba(255,255,255,0.25) !important;
-}
 
 .main {
   flex: 1;

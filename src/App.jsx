@@ -3,12 +3,9 @@ import { scenarios } from './data/scenarios'
 import DecisionTree from './components/DecisionTree'
 import StepPanel from './components/StepPanel'
 import ScenarioComplete from './components/ScenarioComplete'
-import DecisionTreeReference from './components/DecisionTreeReference'
 import styles from './App.module.css'
 
 export default function App() {
-  const [page, setPage] = useState('scenarios')
-
   const [activeScenario, setActiveScenario] = useState(0)
   const [currentStep, setCurrentStep] = useState(0)
   const [completedSteps, setCompletedSteps] = useState([])
@@ -60,19 +57,11 @@ export default function App() {
             <span className={styles.logoSep}>/</span>
             <span className={styles.logoText}>SIS Troubleshooting Training</span>
           </div>
-          <nav className={styles.nav}>
-            <button className={`${styles.navBtn} ${page === 'scenarios' ? styles.navActive : ''}`} onClick={() => setPage('scenarios')}>
-              Practice Scenarios
-            </button>
-            <button className={`${styles.navBtn} ${page === 'reference' ? styles.navActive : ''}`} onClick={() => setPage('reference')}>
-              Decision Tree Reference
-            </button>
-          </nav>
+
         </div>
       </header>
 
-      {page === 'scenarios' && (
-        <main className={styles.main}>
+      <main className={styles.main}>
           <div className={styles.sidebar}>
             <div className={styles.scenarioTabs}>
               {scenarios.map((s, i) => {
@@ -141,9 +130,6 @@ export default function App() {
             )}
           </div>
         </main>
-      )}
-
-      {page === 'reference' && <DecisionTreeReference />}
     </div>
   )
 }
