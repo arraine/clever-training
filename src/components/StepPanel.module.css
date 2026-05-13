@@ -1,0 +1,234 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.stepMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stepBadge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.reviewBadge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--warning);
+  background: var(--warning-dim);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 0.5px solid rgba(251, 191, 36, 0.25);
+}
+
+.question {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+  border: 0.5px solid var(--border);
+  border-left: 2px solid var(--border-hover);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  line-height: 1.5;
+}
+
+.hint svg {
+  margin-top: 1px;
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-elevated);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  width: 100%;
+}
+
+.option:hover:not(:disabled) {
+  border-color: var(--border-hover);
+  background: #1f242d;
+}
+
+.option.selected {
+  border-color: var(--accent-border);
+  background: var(--accent-dim);
+}
+
+.option.correct {
+  border-color: var(--success-border);
+  background: var(--success-dim);
+}
+
+.option.wrong {
+  border-color: var(--error-border);
+  background: var(--error-dim);
+}
+
+.option.reveal {
+  border-color: var(--success-border);
+  background: var(--success-dim);
+  opacity: 0.6;
+}
+
+.option:disabled {
+  cursor: default;
+}
+
+.optionLetter {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  min-width: 18px;
+  flex-shrink: 0;
+}
+
+.option.selected .optionLetter { color: var(--accent); }
+.option.correct .optionLetter { color: var(--success); }
+.option.wrong .optionLetter { color: var(--error); }
+
+.optionText {
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.4;
+  flex: 1;
+}
+
+.optionIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.option.correct .optionIcon { color: var(--success); }
+.option.wrong .optionIcon { color: var(--error); }
+
+.shake {
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+.feedback {
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  border: 0.5px solid;
+}
+
+.feedbackCorrect {
+  background: var(--success-dim);
+  border-color: var(--success-border);
+}
+
+.feedbackWrong {
+  background: var(--error-dim);
+  border-color: var(--error-border);
+}
+
+.feedbackLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+
+.feedbackCorrect .feedbackLabel { color: var(--success); }
+.feedbackWrong .feedbackLabel { color: var(--error); }
+
+.feedbackText {
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.55;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btnPrimary, .btnRetry, .btnNext {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  border: 0.5px solid;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  letter-spacing: 0.02em;
+}
+
+.btnPrimary {
+  background: var(--accent-dim);
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
+.btnPrimary:hover:not(:disabled) {
+  background: rgba(79, 195, 247, 0.2);
+}
+
+.btnPrimary:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btnRetry {
+  background: var(--error-dim);
+  border-color: var(--error-border);
+  color: var(--error);
+}
+
+.btnRetry:hover {
+  background: rgba(248, 113, 113, 0.18);
+}
+
+.btnNext {
+  background: var(--success-dim);
+  border-color: var(--success-border);
+  color: var(--success);
+}
+
+.btnNext:hover {
+  background: rgba(74, 222, 128, 0.18);
+}

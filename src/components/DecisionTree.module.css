@@ -1,0 +1,155 @@
+.tree {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1rem;
+  position: sticky;
+  top: 1.5rem;
+}
+
+.treeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.treeMono {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.treeCount {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent);
+}
+
+.nodes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.nodeRow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.node {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: not-allowed;
+  position: relative;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.node.complete {
+  background: var(--success-dim);
+  border-color: var(--success-border);
+  color: var(--success);
+  cursor: pointer;
+}
+
+.node.complete:hover {
+  background: rgba(74, 222, 128, 0.18);
+  border-color: var(--success);
+}
+
+.node.active {
+  background: var(--accent-dim);
+  border-color: var(--accent-border);
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.node.locked {
+  opacity: 0.35;
+}
+
+.nodeIndex {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.node.complete .nodeIndex,
+.node.active .nodeIndex {
+  display: none;
+}
+
+.node.complete .checkIcon {
+  display: block;
+}
+
+.checkIcon {
+  width: 12px;
+  height: 12px;
+}
+
+.activePulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.4); opacity: 0; }
+}
+
+.connector {
+  width: 1px;
+  height: 16px;
+  background: var(--border);
+  transition: background 0.2s ease;
+}
+
+.connectorDone {
+  background: var(--success-border);
+}
+
+.legend {
+  display: flex;
+  gap: 12px;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.legendDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.dotComplete { background: var(--success); }
+.dotActive { background: var(--accent); }
+.dotLocked { background: var(--border-hover); }
