@@ -1,9 +1,10 @@
 const COOKIE_KEY = 'clever_training_progress'
+const COOKIE_VERSION = 2 // bump this whenever scenarios are added/changed
 const EXPIRY_DAYS = 30
 
 export function saveProgress(state) {
   try {
-    const value = JSON.stringify(state)
+    const value = JSON.stringify({ ...state, _v: COOKIE_VERSION })
     const expires = new Date()
     expires.setDate(expires.getDate() + EXPIRY_DAYS)
     document.cookie = `${COOKIE_KEY}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/;SameSite=Lax`
@@ -18,7 +19,12 @@ export function loadProgress() {
       .split('; ')
       .find(row => row.startsWith(`${COOKIE_KEY}=`))
     if (!match) return null
-    return JSON.parse(decodeURIComponent(match.split('=').slice(1).join('=')))
+    const parsed = JSON.parse(decodeURIComponent(match.split('=').slice(1).join('=')))
+    if (parsed._v !== COOKIE_VERSION) {
+      clearProgress()
+      return null
+    }
+    return parsed
   } catch (e) {
     return null
   }
