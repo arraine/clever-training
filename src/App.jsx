@@ -1,20 +1,58 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { scenarios } from './data/scenarios'
 import DecisionTree from './components/DecisionTree'
 import StepPanel from './components/StepPanel'
 import ScenarioComplete from './components/ScenarioComplete'
+import { saveProgress, loadProgress, clearProgress } from './utils/progress'
 import styles from './App.module.css'
 
+function getInitialState() {
+  const saved = loadProgress()
+  if (saved) return saved
+  return {
+    activeScenario: 0,
+    currentStep: 0,
+    completedSteps: [],
+    scenariosDone: [],
+    view: 'intro',
+  }
+}
+
 export default function App() {
-  const [activeScenario, setActiveScenario] = useState(0)
-  const [currentStep, setCurrentStep] = useState(0)
-  const [completedSteps, setCompletedSteps] = useState([])
-  const [scenariosDone, setScenariosDone] = useState([])
-  const [view, setView] = useState('intro')
+  const initial = getInitialState()
+  const [activeScenario, setActiveScenario] = useState(initial.activeScenario)
+  const [currentStep, setCurrentStep] = useState(initial.currentStep)
+  const [completedSteps, setCompletedSteps] = useState(initial.completedSteps)
+  const [scenariosDone, setScenariosDone] = useState(initial.scenariosDone)
+  const [view, setView] = useState(initial.view === 'review' ? 'step' : initial.view)
   const [reviewStep, setReviewStep] = useState(0)
+  const [showResumed, setShowResumed] = useState(!!loadProgress())
 
   const scenario = scenarios[activeScenario]
   const isScenario2Unlocked = scenariosDone.includes(0)
+  const isScenario3Unlocked = scenariosDone.includes(1)
+  const isScenario4Unlocked = scenariosDone.includes(2)
+
+  function isLocked(index) {
+    if (index === 0) return false
+    if (index === 1) return !isScenario2Unlocked
+    if (index === 2) return !isScenario3Unlocked
+    if (index === 3) return !isScenario4Unlocked
+    return true
+  }
+
+  // Save progress whenever key state changes
+  useEffect(() => {
+    saveProgress({ activeScenario, currentStep, completedSteps, scenariosDone, view })
+  }, [activeScenario, currentStep, completedSteps, scenariosDone, view])
+
+  // Dismiss resume banner after 4 seconds
+  useEffect(() => {
+    if (showResumed) {
+      const t = setTimeout(() => setShowResumed(false), 4000)
+      return () => clearTimeout(t)
+    }
+  }, [showResumed])
 
   function handleStart() { setView('step') }
 
@@ -36,14 +74,20 @@ export default function App() {
 
   function handleBackToStep() { setView('step') }
 
-  function handleUnlockScenario2() {
-    setActiveScenario(1); setCurrentStep(0); setCompletedSteps([]); setView('intro')
+  function handleUnlockNext() {
+    setActiveScenario(activeScenario + 1); setCurrentStep(0); setCompletedSteps([]); setView('intro')
   }
 
   function switchScenario(index) {
-    if (index === 1 && !isScenario2Unlocked) return
+    if (isLocked(index)) return
     setActiveScenario(index); setCurrentStep(0); setCompletedSteps([])
     setView(scenariosDone.includes(index) ? 'complete' : 'intro')
+  }
+
+  function handleReset() {
+    clearProgress()
+    setActiveScenario(0); setCurrentStep(0); setCompletedSteps([])
+    setScenariosDone([]); setView('intro'); setShowResumed(false)
   }
 
   const displayStep = view === 'review' ? reviewStep : currentStep
@@ -57,15 +101,22 @@ export default function App() {
             <span className={styles.logoSep}>/</span>
             <span className={styles.logoText}>SIS Troubleshooting Training</span>
           </div>
-
+          <button className={styles.resetBtn} onClick={handleReset} title="Reset all progress">
+            Reset progress
+          </button>
         </div>
       </header>
 
       <main className={styles.main}>
+        {showResumed && (
+          <div className={styles.resumeBanner}>
+            ↩ Resumed where you left off
+          </div>
+        )}
           <div className={styles.sidebar}>
             <div className={styles.scenarioTabs}>
               {scenarios.map((s, i) => {
-                const locked = i === 1 && !isScenario2Unlocked
+                const locked = isLocked(i)
                 const done = scenariosDone.includes(i)
                 return (
                   <button
@@ -122,8 +173,8 @@ export default function App() {
               <div className={styles.card}>
                 <ScenarioComplete
                   scenario={scenario}
-                  hasNext={activeScenario === 0}
-                  onNext={handleUnlockScenario2}
+                  hasNext={activeScenario < scenarios.length - 1}
+                  onNext={handleUnlockNext}
                   onReview={() => { setReviewStep(0); setView('review') }}
                 />
               </div>
@@ -166,6 +217,9 @@ function IntroPanel({ scenario, onStart }) {
               <path d="M2 10L10 2M10 2H5M10 2v5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
             </svg>
           </a>
+          <span className={styles.splitViewTip}>
+            💡 Tip: Right-click the link and use Chrome's <strong>Open in split screen</strong> to keep Hall Monitor visible alongside this page.
+          </span>
         </div>
         <div className={styles.introMetaItem}>
           <span className={styles.introMetaLabel}>Decision points</span>

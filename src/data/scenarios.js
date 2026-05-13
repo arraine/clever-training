@@ -41,7 +41,7 @@ export const scenarios = [
       {
         id: "s1-4",
         question: "After reviewing the SFTP files, is Diane Schmeler's record present in the incoming data?",
-        hint: "Download the students.csv from SFTP Files and search for her name or ID.",
+        hint: "Download the students.csv from SFTP Files and search for her name or student ID (if provided by the admin).",
         type: "choice",
         options: [
           { label: "Yes — she's in the file", correct: true, feedback: "Good find! She is present in the source data, which means the issue is on Clever's ingestion side, not with the data being sent." },
@@ -94,7 +94,7 @@ export const scenarios = [
         hint: "Check if any non-standard files (like custom fields or extension CSVs) were uploaded separately from the five core files.",
         type: "choice",
         options: [
-          { label: "Yes — custom data uploaded separately", correct: true, feedback: "Good catch. Custom/extension data should be uploaded at least 15–30 minutes apart from the five core files to avoid sync conflicts. This is the expected behavior here." },
+          { label: "Yes — custom data uploaded separately", correct: true, feedback: "Good catch. If any custom/extension data is present, it should be uploaded at least 15–30 minutes apart from the five core files to avoid sync conflicts. There may or may not be custom data in a given district's directory — the key is that if it's there, the timing separation is correct procedure." },
           { label: "No — everything uploaded at once", correct: false, feedback: "There is actually custom data that was uploaded separately. Uploading extension data at a different time from the core files is correct procedure — it avoids sync issues." },
         ],
       },
@@ -150,7 +150,7 @@ export const scenarios = [
       {
         id: "s2-2",
         question: "Check Clever for Corby Adams' schedule. Is the extra schedule data present in Clever?",
-        hint: "Look up the student in Clever and check their section/enrollment data.",
+        hint: "Search for the student in Clever using his Clever ID: 6a04cbf836636602707424bb. Check his section/enrollment data.",
         type: "choice",
         options: [
           { label: "Yes — the extra sections are in Clever", correct: true, feedback: "Confirmed. The upcoming S1 sections are visible in Clever. Since the data is already there, the question becomes: why is Clever showing it?" },
@@ -241,6 +241,209 @@ export const scenarios = [
           { label: "Advise the district to fix the term dates in PowerSchool", correct: false, feedback: "Fixing term dates in PowerSchool won't change how the Plugin exports data — it pulls all current/future enrollments regardless. This needs a filter in Clever." },
           { label: "Escalate to Tier 2 for possible filtering options", correct: true, feedback: "Correct! Since the PowerSchool Plugin can't be configured to filter by term dates at Tier 1, you should explain the situation to the district and escalate to Tier 2. T2 can implement a filter to hide future-term sections until they're needed." },
           { label: "No action needed — this is expected and the district should accept it", correct: false, feedback: "While it is expected behavior, that doesn't mean we leave the district stuck. Escalating to Tier 2 for a filter is the right resolution to actually help them." },
+        ],
+      },
+    ],
+  },
+  {
+    id: 3,
+    title: "Teacher email incorrect",
+    subtitle: "Scenario 3",
+    summary: "Judy House recently got married and changed her last name from \"Babb\" to \"House\". Her email was updated in the SIS from judy.babb@aghs.edu to judy.house@aghs.edu, but it hasn't changed in Clever yet.",
+    districtUrl: "https://hall-monitor.int.clever.com/districts/66317ccabcdefaf99b8af113/info",
+    steps: [
+      {
+        id: "s3-1",
+        question: "Log into Hall Monitor and check the district info page. What is the sync type for this district?",
+        hint: "Look at the Info tab in Hall Monitor — find the SYNC TYPE field.",
+        type: "choice",
+        options: [
+          { label: "API", correct: false, feedback: "Not quite — check the SYNC TYPE field on the Info tab. This district transfers data via CSV files." },
+          { label: "SFTP", correct: true, feedback: "Correct! This district uses SFTP, meaning data is transferred via CSV files." },
+        ],
+      },
+      {
+        id: "s3-2",
+        question: "Check Clever for Judy House's email address. Is it correct in Clever?",
+        hint: "Look up Judy's teacher record in Clever and check the email field.",
+        type: "choice",
+        options: [
+          { label: "Yes — email is correct", correct: false, feedback: "The email in Clever still shows the old address (judy.babb@aghs.edu) — that's exactly the problem we're investigating." },
+          { label: "No — email is still the old one", correct: true, feedback: "Correct. The email hasn't updated in Clever despite being changed in the SIS. Now let's trace where the disconnect is." },
+        ],
+      },
+      {
+        id: "s3-3",
+        question: "Since this is an SFTP sync, where should you check the incoming data?",
+        hint: "For SFTP syncs, raw data comes in as uploaded files.",
+        type: "choice",
+        options: [
+          { label: "Hall Monitor → Normalizer Input", correct: false, feedback: "Normalizer Input is for API syncs. Since this is SFTP, check the source files in Hall Monitor → SFTP Files." },
+          { label: "Hall Monitor → SFTP Files", correct: true, feedback: "Correct. Download the teachers.csv from SFTP Files to check the incoming email value." },
+        ],
+      },
+      {
+        id: "s3-4",
+        question: "Since we're troubleshooting email data specifically, which resource should you consult before going further?",
+        hint: "There's a dedicated Guru card for staff and email data troubleshooting.",
+        type: "choice",
+        options: [
+          { label: "Guru: T1 SIS Troubleshooting: Data Missing/Incorrect", correct: false, feedback: "That's the general troubleshooting card. Since we're dealing with email data specifically, there's a more targeted resource — the SIS Troubleshooting: Staff and Email Data card." },
+          { label: "Guru: SIS Troubleshooting: Staff and Email Data", correct: true, feedback: "Exactly right. Email data has its own dedicated troubleshooting card. Open it now: https://app.getguru.com/card/TLoLAnqc/SIS-Troubleshooting-Staff-and-Email-Data" },
+        ],
+      },
+      {
+        id: "s3-5",
+        question: "You check teachers.csv and the new email (judy.house@aghs.edu) is correct in the file. Next, check Hall Monitor > Sync Settings > System Settings. Is outside_data_sources_map present?",
+        hint: "Look in the System Settings section of Hall Monitor for this district. This field indicates whether external data sources are configured.",
+        type: "choice",
+        options: [
+          { label: "Yes — outside_data_sources_map is present", correct: true, feedback: "Good find. This means the district has configured external data sources. We'll need to investigate which sources are listed and whether they're overriding the SIS email." },
+          { label: "No — it's not there", correct: false, feedback: "It is actually present for this district. Check System Settings carefully — outside_data_sources_map controls whether external sources can override SIS data." },
+        ],
+      },
+      {
+        id: "s3-6",
+        question: "Which source is listed in outside_data_sources_map?",
+        hint: "Look at the value of the outside_data_sources_map field. Common values are idm, ps_emails, or manual.",
+        type: "choice",
+        options: [
+          { label: "idm", correct: false, feedback: "Not idm — look more carefully at the outside_data_sources_map value. The source listed here is one that indicates manually uploaded email data." },
+          { label: "ps_emails", correct: false, feedback: "Not ps_emails. The source configured here indicates emails that were manually uploaded by the district, not pulled from a PowerSchool integration." },
+          { label: "manual", correct: true, feedback: "Correct — the source is 'manual', which means the district previously uploaded email addresses as a separate data file. This manual data may be overriding the SIS email." },
+        ],
+      },
+      {
+        id: "s3-7",
+        question: "Go to Hall Monitor > Advanced. Is enable_email_override turned on?",
+        hint: "Check the Advanced settings in Hall Monitor for this district. This setting controls whether manually uploaded emails take precedence over SIS emails.",
+        type: "choice",
+        options: [
+          { label: "Yes — enable_email_override is on", correct: true, feedback: "That's the culprit. With enable_email_override turned on, the manually uploaded email is overriding the updated SIS email. Now we need to confirm the source of that manual data." },
+          { label: "No — it's off", correct: false, feedback: "It is actually turned on for this district. enable_email_override being on means manually uploaded emails take precedence over the SIS — which explains why Judy's old email is still showing." },
+        ],
+      },
+      {
+        id: "s3-8",
+        question: "Go to Data Sources > Upload and download teacher_emails.csv. Is Judy's old email address (judy.babb@aghs.edu) present in that file?",
+        hint: "The teacher_emails.csv file contains any manually sideloaded email addresses. Search for Judy's record.",
+        type: "choice",
+        options: [
+          { label: "Yes — old email is in the file", correct: true, feedback: "Confirmed. Judy's old email was manually uploaded and is still sitting in Clever, overriding the SIS value because enable_email_override is on. Now we need to work with the district to resolve this." },
+          { label: "No — she's not in the file", correct: false, feedback: "She is actually in the file with her old email. The manually uploaded teacher_emails.csv is what's overriding the SIS value." },
+        ],
+      },
+      {
+        id: "s3-9",
+        question: "enable_email_override is on and the manual email is the cause. Assuming the district confirms they no longer want to sideload emails, what is the correct next step?",
+        hint: "This requires both getting consent and involving Tier 2 to remove the manual data object and push a sync.",
+        type: "choice",
+        options: [
+          { label: "Ask the district to re-upload teachers.csv with the corrected email", correct: false, feedback: "Re-uploading teachers.csv won't help while enable_email_override is on — the manual email data will keep winning. The sideloaded emails need to be removed first." },
+          { label: "Turn off enable_email_override yourself in Hall Monitor", correct: false, feedback: "Turning off the setting alone isn't enough — the manual email object still exists in Clever and needs to be deleted. This also requires district consent and Tier 2 involvement." },
+          { label: "Use TB [custom.nosideload] to get district consent, then tag @tier2 in #solutions-ama with [custom.amamanual] to remove the manual object and push a sync", correct: true, feedback: "Exactly right. First use TB [custom.nosideload] to confirm the district wants to stop sideloading emails. Once they confirm, tag @tier2 in #solutions-ama using [custom.amamanual] — T2 will remove the manual email object and push a sync so the SIS email takes over." },
+          { label: "Escalate to Tier 2 immediately without contacting the district", correct: false, feedback: "You need district consent before making changes to their email configuration. Use TB [custom.nosideload] first to confirm they want to stop sideloading, then loop in Tier 2." },
+        ],
+      },
+    ],
+  },
+  {
+    id: 4,
+    title: "Teacher missing their schedule",
+    subtitle: "Scenario 4",
+    summary: "Braeden Glover (Clever ID: 663186d71756e30050b28d7b) is missing his schedule. He should have 7 AP Art History sections, for example section ID 1_959, but instead has nothing.",
+    districtUrl: "https://hall-monitor.int.clever.com/districts/66317ccabcdefaf99b8af113/info",
+    steps: [
+      {
+        id: "s4-1",
+        question: "Log into Hall Monitor and check the district info page. What is the sync type for this district?",
+        hint: "Look at the Info tab in Hall Monitor — find the SYNC TYPE field.",
+        type: "choice",
+        options: [
+          { label: "API", correct: false, feedback: "Not quite — check the SYNC TYPE field on the Info tab. This district transfers data via CSV files." },
+          { label: "SFTP", correct: true, feedback: "Correct! This district uses SFTP, meaning data is transferred via CSV files." },
+        ],
+      },
+      {
+        id: "s4-2",
+        question: "Check Clever for Braeden Glover's schedule. Is the section data present in Clever?",
+        hint: "Look up Braeden Glover in Clever using his Clever ID: 663186d71756e30050b28d7b. Check whether any sections appear on his schedule.",
+        type: "choice",
+        options: [
+          { label: "Yes — sections are present", correct: false, feedback: "Braeden actually has no sections in Clever — that's the reported issue. His schedule is completely empty." },
+          { label: "No — schedule is empty", correct: true, feedback: "Confirmed. Braeden has no sections in Clever. Since the data is missing, we need to check whether it's present in the incoming data." },
+        ],
+      },
+      {
+        id: "s4-3",
+        question: "Since this is an SFTP sync, where should you check the incoming data?",
+        hint: "For SFTP syncs, raw data comes in as uploaded CSV files.",
+        type: "choice",
+        options: [
+          { label: "Hall Monitor → Normalizer Input", correct: false, feedback: "Normalizer Input is for API syncs. Since this is SFTP, check the source CSV files in Hall Monitor → SFTP Files." },
+          { label: "Hall Monitor → SFTP Files", correct: true, feedback: "Correct. Download the relevant CSV files from SFTP Files to check the incoming data." },
+        ],
+      },
+      {
+        id: "s4-4",
+        question: "After reviewing the SFTP files, are Braeden's AP Art History sections present in the incoming data?",
+        hint: "Check sections.csv for section ID 1_959 and the other Art History sections. Make note of the section_id values before moving forward — you'll need them.",
+        type: "choice",
+        options: [
+          { label: "Yes — the sections are in the file", correct: true, feedback: "Good. The sections are present in the incoming data, which means the issue is on Clever's ingestion side. Make sure you've noted the section_id values (including 1_959) before continuing — they'll be useful when reviewing errors." },
+          { label: "No — the sections are missing from the file", correct: false, feedback: "The Art History sections are actually present in sections.csv. If they were missing here, the district would need to correct their file. Since they're present, the issue is in how Clever is processing them." },
+        ],
+      },
+      {
+        id: "s4-5",
+        question: "Is the sync currently on hold?",
+        hint: "Check the Holds tab in Hall Monitor for this district.",
+        type: "choice",
+        options: [
+          { label: "Yes — sync is on hold", correct: false, feedback: "There's no hold on this sync. A hold would prevent all data from syncing, not just one teacher's sections." },
+          { label: "No — no hold", correct: true, feedback: "Correct, no hold. Keep investigating." },
+        ],
+      },
+      {
+        id: "s4-6",
+        question: "Is the sync currently paused?",
+        hint: "Check the Sync page for a paused status.",
+        type: "choice",
+        options: [
+          { label: "Yes — sync is paused", correct: false, feedback: "The sync isn't paused. The issue is more specific than a blanket pause." },
+          { label: "No — not paused", correct: true, feedback: "Correct. The sync is running normally. We need to look at what's happening during the sync itself." },
+        ],
+      },
+      {
+        id: "s4-7",
+        question: "Check the Sync page (schools.clever.com/sync) for this district. Are there any relevant errors listed?",
+        hint: "Look at the most recent sync run. Filter or search for errors related to sections or the teacher_id field.",
+        type: "choice",
+        options: [
+          { label: "Yes — there are relevant errors", correct: true, feedback: "Good catch. There are errors on the Sync page related to these sections. Download the error report to see the details." },
+          { label: "No — no errors", correct: false, feedback: "There are actually errors present on the Sync page for this district. Review the most recent sync run carefully — look for anything related to sections or teacher assignments." },
+        ],
+      },
+      {
+        id: "s4-8",
+        question: "After downloading the error report from the Sync page, are there any relevant error messages?",
+        hint: "Open the downloaded CSV and look for errors referencing the section IDs you noted earlier (like 1_959) or the teacher_id field.",
+        type: "choice",
+        options: [
+          { label: "Yes — there are relevant error messages", correct: true, feedback: "Exactly. The error messages reference these sections and indicate a problem with the teacher_id values. Read the errors carefully to understand what needs to be corrected." },
+          { label: "No — no useful information in the errors", correct: false, feedback: "There are actually useful error messages in the report — look specifically for errors referencing the section IDs you noted (like 1_959) and the teacher_id field." },
+        ],
+      },
+      {
+        id: "s4-9",
+        question: "The error messages indicate the teacher_id values on those sections don't match Braeden's teacher_id in Clever. What is the correct next step?",
+        hint: "The fix needs to happen in the source data. Think about which file contains the teacher_id for sections, and what needs to happen after it's corrected.",
+        type: "choice",
+        options: [
+          { label: "Advise the district to update the teacher_id on those sections in sections.csv with Braeden's correct teacher_id, then re-upload all five required files", correct: true, feedback: "Exactly right. The district needs to open sections.csv, find the AP Art History sections (including section ID 1_959), update the teacher_id field to match Braeden Glover's correct teacher_id, and then re-upload all five required files (schools.csv, students.csv, teachers.csv, sections.csv, enrollments.csv) together to trigger a full sync." },
+          { label: "Ask the district to manually add Braeden to those sections in Clever", correct: false, feedback: "Manually adding sections in Clever won't work — they'll be overwritten on the next sync because the underlying sections.csv still has the wrong teacher_id. The fix must happen in the source file." },
+          { label: "Escalate to Tier 2 to correct the teacher_id mapping", correct: false, feedback: "This is a straightforward Tier 1 fix. The district just needs to correct the teacher_id in sections.csv and re-upload all five files. No escalation needed." },
+          { label: "Advise the district to re-upload sections.csv only with the corrected teacher_id", correct: false, feedback: "Re-uploading only sections.csv isn't enough — all five required files must be uploaded together at the same time to trigger a proper sync." },
         ],
       },
     ],
