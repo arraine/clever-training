@@ -5,31 +5,44 @@
 }
 
 :root {
-  --bg: #0d0f12;
-  --bg-card: #13161b;
-  --bg-elevated: #1a1e25;
-  --border: #252a33;
-  --border-hover: #353d4a;
-  --text-primary: #e8ecf0;
-  --text-secondary: #7a8799;
-  --text-muted: #4a5568;
-  --accent: #4fc3f7;
-  --accent-dim: rgba(79, 195, 247, 0.12);
-  --accent-border: rgba(79, 195, 247, 0.35);
-  --success: #4ade80;
-  --success-dim: rgba(74, 222, 128, 0.1);
-  --success-border: rgba(74, 222, 128, 0.3);
-  --error: #f87171;
-  --error-dim: rgba(248, 113, 113, 0.1);
-  --error-border: rgba(248, 113, 113, 0.3);
-  --warning: #fbbf24;
-  --warning-dim: rgba(251, 191, 36, 0.1);
-  --node-active: #4fc3f7;
-  --node-complete: #4ade80;
-  --node-locked: #252a33;
-  --node-current: rgba(79, 195, 247, 0.15);
-  --font-sans: 'IBM Plex Sans', sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  /* Clever brand colors */
+  --clever-blue: #1464FF;
+  --clever-navy: #0A1E46;
+  --clever-light-blue: #DAEBFF;
+  --clever-orange: #F78239;
+  --clever-yellow: #FFE478;
+  --clever-green: #4ECC97;
+  --clever-black: #1C1C1C;
+  --clever-white: #FFFFFF;
+
+  /* UI tokens */
+  --bg: #F7F9FC;
+  --bg-card: #FFFFFF;
+  --bg-elevated: #F0F4FA;
+  --border: #DDE4EF;
+  --border-hover: #B8C8E8;
+  --text-primary: #0A1E46;
+  --text-secondary: #4A5D7A;
+  --text-muted: #8A9AB5;
+
+  --accent: #1464FF;
+  --accent-dim: rgba(20, 100, 255, 0.08);
+  --accent-border: rgba(20, 100, 255, 0.3);
+
+  --success: #1A8C5E;
+  --success-dim: rgba(78, 204, 151, 0.12);
+  --success-border: rgba(78, 204, 151, 0.4);
+
+  --error: #C0392B;
+  --error-dim: rgba(192, 57, 43, 0.08);
+  --error-border: rgba(192, 57, 43, 0.3);
+
+  --warning: #B8860B;
+  --warning-bg: #FFFBEA;
+  --warning-dim: rgba(255, 228, 120, 0.3);
+
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Merriweather', serif;
   --radius: 6px;
   --radius-lg: 10px;
 }

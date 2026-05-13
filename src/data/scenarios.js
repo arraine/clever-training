@@ -12,10 +12,8 @@ export const scenarios = [
         hint: "Look at the Info tab in Hall Monitor — find the SYNC TYPE field.",
         type: "choice",
         options: [
-          { label: "API", correct: false, feedback: "Not quite — look more carefully at the SYNC TYPE field on the Info tab. It shows the method used to transfer files to Clever." },
+          { label: "API", correct: false, feedback: "Not quite — look more carefully at the SYNC TYPE field on the Info tab. This district transfers data via CSV files, not a direct API connection." },
           { label: "SFTP", correct: true, feedback: "Correct! This district uses SFTP, which means data is transferred via CSV files dropped into an SFTP directory." },
-          { label: "OAuth", correct: false, feedback: "OAuth is an authentication method, not a sync type. Check the SYNC TYPE field specifically." },
-          { label: "OneRoster", correct: false, feedback: "OneRoster is a data spec, not a sync type here. Look at the SYNC TYPE field on the Info tab." },
         ],
       },
       {
@@ -72,12 +70,12 @@ export const scenarios = [
       },
       {
         id: "s1-7",
-        question: "Check the Sync page in Hall Monitor. Are there any errors listed?",
-        hint: "Look at the most recent sync run on the Sync/Timeline page.",
+        question: "Check the Sync page for this district. Are there any errors listed that could explain the discrepancy?",
+        hint: "Go to the Sync page (schools.clever.com/sync) for this district and review the most recent sync run.",
         type: "choice",
         options: [
-          { label: "Yes — there are errors", correct: false, feedback: "There are actually no errors showing on the Sync page for this district. Move on to checking the files themselves." },
-          { label: "No — no errors", correct: true, feedback: "Right. No sync errors, so the problem isn't being flagged by the system directly. We need to look more carefully at the file structure." },
+          { label: "Yes — there are errors that explain it", correct: false, feedback: "There are actually no errors on the Sync page for this district. Move on to checking the files more carefully." },
+          { label: "No — no relevant errors", correct: true, feedback: "Right. No errors on the Sync page, so the problem isn't being flagged directly. We need to look more carefully at the file structure itself." },
         ],
       },
       {
@@ -126,10 +124,8 @@ export const scenarios = [
         hint: "An extra comma in a CSV file will break how that row is parsed — Clever won't be able to read that record correctly.",
         type: "choice",
         options: [
-          { label: "Re-upload all five required files to trigger a fresh sync", correct: false, feedback: "Re-uploading the same files won't help if students.csv still has the formatting error. You need to fix the file first." },
-          { label: "Escalate to Tier 2 immediately", correct: false, feedback: "This is a Tier 1 fix — it doesn't need escalation. The district just needs to correct the CSV formatting error themselves." },
-          { label: "Advise the district to remove the extra comma on line 2 of students.csv, then re-upload", correct: true, feedback: "Perfect! The extra comma on line 2 is corrupting Diane's record. The district needs to open students.csv, remove the extra comma, and re-upload the corrected file. Clever will pick it up on the next sync." },
-          { label: "Ask the district to re-enter Diane's data in their SIS", correct: false, feedback: "The SIS data is fine — this is a CSV formatting issue that happened during export. The fix is to correct line 2 of the students.csv file, not re-enter data in the SIS." },
+          { label: "Advise the district to remove the extra comma on line 2 of students.csv, then re-upload all five required files", correct: true, feedback: "Perfect! The extra comma on line 2 is corrupting Diane's record. The district needs to open students.csv, remove the extra comma, then re-upload all five required files (schools.csv, students.csv, teachers.csv, sections.csv, enrollments.csv) together so Clever picks up the fix on the next sync." },
+          { label: "Escalate to Tier 2 to investigate the CSV parsing issue", correct: false, feedback: "This is a Tier 1 fix — no escalation needed. The CSV Analyst message tells us exactly what's wrong. The district just needs to remove the extra comma on line 2 of students.csv and re-upload all five required files." },
         ],
       },
     ],
@@ -149,8 +145,6 @@ export const scenarios = [
         options: [
           { label: "SFTP", correct: false, feedback: "Not this time — check the SYNC TYPE field again on the Info tab. This district uses a direct connection method, not file transfers." },
           { label: "API", correct: true, feedback: "Correct! This district uses an API sync (PowerSchool Plugin), which means data is pulled directly from the SIS via API rather than CSV files." },
-          { label: "OneRoster", correct: false, feedback: "OneRoster is a data spec. The sync type here is API. Check the SYNC TYPE field on the Info tab." },
-          { label: "Manual upload", correct: false, feedback: "There's no manual upload sync type here. This district uses API. Check the SYNC TYPE on the Info tab." },
         ],
       },
       {
@@ -176,13 +170,11 @@ export const scenarios = [
       {
         id: "s2-4",
         question: "Since this is an API sync, where should you check to inspect the incoming (raw) data?",
-        hint: "For API syncs, raw data comes through the normalizer — not via uploaded files.",
+        hint: "For API syncs, raw data comes through the normalizer. Navigate to Hall Monitor > Timeline > latest sync > powerschool-api-plugin-normalizer.",
         type: "choice",
         options: [
-          { label: "Hall Monitor → SFTP Files", correct: false, feedback: "SFTP Files is for SFTP syncs. This district uses API (PowerSchool Plugin), so the raw data comes through the normalizer. Check Normalizer Input instead." },
-          { label: "Hall Monitor → Normalizer Input", correct: true, feedback: "Exactly right. For API syncs, you inspect the raw incoming data via the Normalizer Input in Hall Monitor's Timeline section." },
-          { label: "CSV Analyst", correct: false, feedback: "CSV Analyst is a tool for SFTP file syncs. This district uses API — check the Normalizer Input in Hall Monitor." },
-          { label: "Clever Data Browser", correct: false, feedback: "The Data Browser shows what's already in Clever, not the raw incoming data. For API syncs, check the Normalizer Input." },
+          { label: "Hall Monitor → SFTP Files", correct: false, feedback: "SFTP Files is for SFTP syncs. This district uses API (PowerSchool Plugin), so check the normalizer input instead: Hall Monitor > Timeline > latest sync > powerschool-api-plugin-normalizer." },
+          { label: "Hall Monitor → Timeline → latest sync → powerschool-api-plugin-normalizer", correct: true, feedback: "Exactly right. For PowerSchool Plugin API syncs, you inspect the raw incoming data by going to Hall Monitor > Timeline, clicking into the latest sync, and finding the powerschool-api-plugin-normalizer step." },
         ],
       },
       {
