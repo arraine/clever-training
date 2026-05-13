@@ -204,7 +204,7 @@ function IntroPanel({ scenario, onStart }) {
             </svg>
           </a>
           <span className={styles.splitViewTip}>
-            💡 Tip: Right-click the link and use Chrome's <strong>Open in split screen</strong> to keep Hall Monitor visible alongside this page.
+            💡 Tip: Open the district link, impersonate into the Clever dashboard, then right-click this tab and use Chrome's <strong>Open in split screen</strong> to keep Clever visible alongside this page.
           </span>
         </div>
         <div className={styles.introMetaItem}>

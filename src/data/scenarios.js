@@ -264,12 +264,12 @@ export const scenarios = [
       },
       {
         id: "s3-2",
-        question: "Check Clever for Judy House's email address. Is it correct in Clever?",
-        hint: "Look up Judy's teacher record in Clever and check the email field.",
+        question: "Check Clever for Judy House's email address. The correct email should be judy.house@aghs.edu. Is it showing correctly in Clever?",
+        hint: "Look up Judy's teacher record in Clever and check the email field. You're looking for judy.house@aghs.edu.",
         type: "choice",
         options: [
-          { label: "Yes — email is correct", correct: false, feedback: "The email in Clever still shows the old address (judy.babb@aghs.edu) — that's exactly the problem we're investigating." },
-          { label: "No — email is still the old one", correct: true, feedback: "Correct. The email hasn't updated in Clever despite being changed in the SIS. Now let's trace where the disconnect is." },
+          { label: "Yes — it shows judy.house@aghs.edu", correct: false, feedback: "The email in Clever still shows the old address (judy.babb@aghs.edu) — that's exactly the problem we're investigating." },
+          { label: "No — it still shows judy.babb@aghs.edu", correct: true, feedback: "Correct. The email hasn't updated in Clever despite being changed in the SIS. Now let's trace where the disconnect is." },
         ],
       },
       {
@@ -315,12 +315,12 @@ export const scenarios = [
       },
       {
         id: "s3-7",
-        question: "Go to Hall Monitor > Advanced. Is enable_email_override turned on?",
-        hint: "Check the Advanced settings in Hall Monitor for this district. This setting controls whether manually uploaded emails take precedence over SIS emails.",
+        question: "Go to Hall Monitor > Advanced. Is the enable_email_override checkbox checked?",
+        hint: "Look for the enable_email_override setting in the Advanced section. It appears as a checkbox.",
         type: "choice",
         options: [
-          { label: "Yes — enable_email_override is on", correct: true, feedback: "That's the culprit. With enable_email_override turned on, the manually uploaded email is overriding the updated SIS email. Now we need to confirm the source of that manual data." },
-          { label: "No — it's off", correct: false, feedback: "It is actually turned on for this district. enable_email_override being on means manually uploaded emails take precedence over the SIS — which explains why Judy's old email is still showing." },
+          { label: "Yes — the box is checked", correct: true, feedback: "That's the culprit. With enable_email_override checked, the manually uploaded email is overriding the updated SIS email. Now we need to confirm the source of that manual data." },
+          { label: "No — the box is unchecked", correct: false, feedback: "The box is actually checked for this district. enable_email_override being checked means manually uploaded emails take precedence over the SIS — which explains why Judy's old email is still showing." },
         ],
       },
       {
@@ -341,7 +341,7 @@ export const scenarios = [
         options: [
           { label: "Ask the district to re-upload teachers.csv with the corrected email", correct: false, feedback: "Re-uploading teachers.csv won't help while enable_email_override is on — the manual email data will keep winning. The sideloaded emails need to be removed first." },
           { label: "Turn off enable_email_override yourself in Hall Monitor", correct: false, feedback: "Turning off the setting alone isn't enough — the manual email object still exists in Clever and needs to be deleted. This also requires district consent and Tier 2 involvement." },
-          { label: "Use TB [custom.nosideload] to get district consent, then tag @tier2 in #solutions-ama with [custom.amamanual] to remove the manual object and push a sync", correct: true, feedback: "Exactly right. First use TB [custom.nosideload] to confirm the district wants to stop sideloading emails. Once they confirm, tag @tier2 in #solutions-ama using [custom.amamanual] — T2 will remove the manual email object and push a sync so the SIS email takes over." },
+          { label: "Use TB [custom.nosideload] to get district consent, then tag @tier2 in #solutions-ama with [custom.amamanual] to remove the manual object and push a sync", correct: true, feedback: "Exactly right. First use TB [custom.nosideload] to confirm the district wants to stop sideloading emails. Once they confirm, tag @tier2 in #solutions-ama using [custom.amamanual] — T2 will remove the manual email object and push a sync. Head back to the Clever dashboard to verify that judy.house@aghs.edu is showing correctly after the sync completes." },
           { label: "Escalate to Tier 2 immediately without contacting the district", correct: false, feedback: "You need district consent before making changes to their email configuration. Use TB [custom.nosideload] first to confirm they want to stop sideloading, then loop in Tier 2." },
         ],
       },
@@ -416,21 +416,21 @@ export const scenarios = [
       },
       {
         id: "s4-7",
-        question: "Check the Sync page (schools.clever.com/sync) for this district. Are there any relevant errors listed?",
-        hint: "Look at the most recent sync run. Filter or search for errors related to sections or the teacher_id field.",
+        question: "Check the Sync page (schools.clever.com/sync) for this district. Are there any errors for the sections data type?",
+        hint: "On the Sync page, look at the most recent sync run and filter or look for errors specifically under the sections data type.",
         type: "choice",
         options: [
-          { label: "Yes — there are relevant errors", correct: true, feedback: "Good catch. There are errors on the Sync page related to these sections. Download the error report to see the details." },
-          { label: "No — no errors", correct: false, feedback: "There are actually errors present on the Sync page for this district. Review the most recent sync run carefully — look for anything related to sections or teacher assignments." },
+          { label: "Yes — there are section errors", correct: true, feedback: "Good catch. There are errors on the Sync page for sections. Click the blue download arrow to download the changes report and review the error details." },
+          { label: "No — no section errors", correct: false, feedback: "There are actually section errors present on the Sync page for this district. Review the most recent sync run and look specifically at the sections data type." },
         ],
       },
       {
         id: "s4-8",
-        question: "After downloading the error report from the Sync page, are there any relevant error messages?",
+        question: "Click the blue download arrow on the Sync page to download the changes report. After opening it, are there error messages relevant to Braeden's sections?",
         hint: "Open the downloaded CSV and look for errors referencing the section IDs you noted earlier (like 1_959) or the teacher_id field.",
         type: "choice",
         options: [
-          { label: "Yes — there are relevant error messages", correct: true, feedback: "Exactly. The error messages reference these sections and indicate a problem with the teacher_id values. Read the errors carefully to understand what needs to be corrected." },
+          { label: "Yes — there are relevant error messages", correct: true, feedback: "Exactly. The error messages reference these sections and indicate a problem with the teacher_id values. This tells us exactly what needs to be corrected in the source file." },
           { label: "No — no useful information in the errors", correct: false, feedback: "There are actually useful error messages in the report — look specifically for errors referencing the section IDs you noted (like 1_959) and the teacher_id field." },
         ],
       },
