@@ -29,17 +29,7 @@ export default function App() {
   const [showResumed, setShowResumed] = useState(!!loadProgress())
 
   const scenario = scenarios[activeScenario]
-  const isScenario2Unlocked = scenariosDone.includes(0)
-  const isScenario3Unlocked = scenariosDone.includes(1)
-  const isScenario4Unlocked = scenariosDone.includes(2)
-
-  function isLocked(index) {
-    if (index === 0) return false
-    if (index === 1) return !isScenario2Unlocked
-    if (index === 2) return !isScenario3Unlocked
-    if (index === 3) return !isScenario4Unlocked
-    return true
-  }
+  const isLocked = () => false
 
   // Save progress whenever key state changes
   useEffect(() => {
@@ -116,20 +106,16 @@ export default function App() {
           <div className={styles.sidebar}>
             <div className={styles.scenarioTabs}>
               {scenarios.map((s, i) => {
-                const locked = isLocked(i)
                 const done = scenariosDone.includes(i)
                 return (
                   <button
                     key={s.id}
-                    className={`${styles.tab} ${activeScenario === i ? styles.tabActive : ''} ${locked ? styles.tabLocked : ''}`}
+                    className={`${styles.tab} ${activeScenario === i ? styles.tabActive : ''}`}
                     onClick={() => switchScenario(i)}
-                    disabled={locked}
-                    title={locked ? 'Complete Scenario 1 to unlock' : ''}
                   >
                     <span className={styles.tabNum}>0{i + 1}</span>
                     <span className={styles.tabLabel}>{s.title}</span>
                     {done && <span className={styles.tabDone}>✓</span>}
-                    {locked && <span className={styles.tabLock}>🔒</span>}
                   </button>
                 )
               })}
