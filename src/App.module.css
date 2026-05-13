@@ -302,6 +302,8 @@
 
 .splitViewTip strong { font-weight: 600; color: var(--text-primary); }
 
+.districtLink {
+  display: inline-flex;
   align-items: center;
   gap: 5px;
   font-size: 14px;
