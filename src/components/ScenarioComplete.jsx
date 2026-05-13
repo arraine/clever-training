@@ -33,7 +33,7 @@ export default function ScenarioComplete({ scenario, hasNext, onNext, onReview }
         </button>
         {hasNext && (
           <button className={styles.btnNext} onClick={onNext}>
-            Unlock Scenario {scenario.id + 1} →
+            Continue to Scenario {scenario.id + 1} →
           </button>
         )}
       </div>
